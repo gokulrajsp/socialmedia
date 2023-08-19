@@ -77,7 +77,7 @@ export const updateUser = async (req, res) => {
       location,
       occupation,
     } = req.body;
-
+    console.log(firstName)
     const user = User.findByIdAndUpdate(id, { firstName, lastName, email, picturePath, location, occupation })
     const getUpdatedUser = await User.findById(id)
     res.status(200).json(getUpdatedUser)
