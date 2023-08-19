@@ -1,4 +1,5 @@
 import User from "../models/Usermodel.js";
+import Post from "../models/Postmodel.js"
 
 //Read
 export const getUser = async (req, res) => {
@@ -38,7 +39,7 @@ export const addRemoveFriend = async (req, res) => {
     const { id, friendId } = req.params;
     const user = await User.findById(id);
     const friend = await User.findById(friendId);
- 
+
     if (user.friends.includes(friendId)) {
       user.friends = user.friends.filter((id) => id !== friendId);
       friend.friends = friend.friends.filter((fid) => fid !== id);
@@ -63,4 +64,38 @@ export const addRemoveFriend = async (req, res) => {
     res.status(404).json({ msg: err.message });
   }
 };
+
+
+export const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      firstName,
+      lastName,
+      email,
+      picturePath,
+      location,
+      occupation,
+    } = req.body;
+
+    const user = User.findByIdAndUpdate(id, { firstName, lastName, email, picturePath, location, occupation })
+    const getUpdatedUser = await User.findById(id)
+    res.status(200).json(getUpdatedUser)
+
+  } catch (err) {
+    res.status(404).json({ msg: err.message });
+  }
+}
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params
+    const user = await User.findById(id);
+    await Post.deleteMany({ userId: user._id })
+    await User.findByIdAndDelete(id)
+    res.send("user deleted successfully")
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+}
 

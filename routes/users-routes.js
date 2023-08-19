@@ -10,5 +10,9 @@ router.get("/:id/friends", verifyToken, getUserFriends)
 
 //Update
 router.patch("/:id/:friendId", verifyToken,addRemoveFriend)
+router.patch("/:id", verifyToken, updateUser)
+
+//delete
+router.delete("/:id", verifyToken, deleteUser)
 
 export default router
