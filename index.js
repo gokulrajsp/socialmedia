@@ -1,5 +1,4 @@
 import express from "express";
-import bodyparser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -23,11 +22,11 @@ dotenv.config();
 
 //MiddleWares
 const app = express();
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(bodyparser.json({ limit: "30mb", extended: true }));
-app.use(bodyparser.urlencoded({ limit: "30mb", extended: true }));
+
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 

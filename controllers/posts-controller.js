@@ -3,7 +3,7 @@ import User from "../models/Usermodel.js";
 
 //Create Post
 
- export const createPost = async (req, res) => {
+export const createPost = async (req, res) => {
   try {
     const { userId, description, file } = req.body;
     const user = await User.findById(userId);
@@ -29,19 +29,19 @@ import User from "../models/Usermodel.js";
 
 //Read
 
- export const getFeedPosts = async (req, res) => {
+export const getFeedPosts = async (req, res) => {
   try {
-    const post = await Post.find().sort({createdAt: -1});
+    const post = await Post.find().sort({ createdAt: -1 });
     res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ msg: err.message });
   }
 };
 
- export const getUserPosts = async (req, res) => {
+export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const post = await Post.find({ userId }).sort({createdAt: -1});
+    const post = await Post.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ msg: err.message });
@@ -53,7 +53,7 @@ import User from "../models/Usermodel.js";
 export const likePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const {userId} = req.body;
+    const { userId } = req.body;
     const post = await Post.findById(id);
     const isLiked = post.likes.get(userId);
 
@@ -70,9 +70,43 @@ export const likePost = async (req, res) => {
     );
 
     res.status(200).json(updatePost)
-    
+
   } catch (err) {
     res.status(404).json({ msg: err.message });
   }
 };
 
+export const deletePost = async (req, res) => {
+  try {
+    const { id, userId } = req.params
+    console.log(userId)
+    const posts = await Post.findById(id)
+    const isAuthor = (JSON.stringify(userId) === JSON.stringify(posts.userId))
+    if (isAuthor) {
+      await Post.findByIdAndDelete(id);
+      const post = await Post.find()
+      res.status(200).json(post)
+    } else {
+      res.status(401).json("You aren't permitted")
+    }
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+}
+
+
+export const updateComments = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userIdLogged, firstName, email, comment } = req.body;
+    console.log(req.body)
+    const post = await Post.findById(id);
+    post.comments.push({ userIdLogged, firstName, email, comment })
+    const updatedpost = await Post.findByIdAndUpdate(id, { comments: post.comments }, { new: true })
+    // const updatedposts = await Post.find()
+    res.status(200).json(updatedpost)
+
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
+}

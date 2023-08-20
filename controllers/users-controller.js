@@ -1,5 +1,4 @@
 import User from "../models/Usermodel.js";
-import Post from "../models/Postmodel.js"
 
 //Read
 export const getUser = async (req, res) => {
@@ -39,7 +38,7 @@ export const addRemoveFriend = async (req, res) => {
     const { id, friendId } = req.params;
     const user = await User.findById(id);
     const friend = await User.findById(friendId);
-
+ 
     if (user.friends.includes(friendId)) {
       user.friends = user.friends.filter((id) => id !== friendId);
       friend.friends = friend.friends.filter((fid) => fid !== id);
@@ -65,10 +64,10 @@ export const addRemoveFriend = async (req, res) => {
   }
 };
 
-
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id)
     const {
       firstName,
       lastName,
@@ -77,7 +76,7 @@ export const updateUser = async (req, res) => {
       location,
       occupation,
     } = req.body;
-    console.log(firstName)
+    console.log(req.body)
     const user = User.findByIdAndUpdate(id, { firstName, lastName, email, picturePath, location, occupation })
     const getUpdatedUser = await User.findById(id)
     res.status(200).json(getUpdatedUser)
