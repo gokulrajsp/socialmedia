@@ -97,11 +97,9 @@ export const deletePost = async (req, res) => {
 
 export const updateComments = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { userIdLogged, firstName, email, comment } = req.body;
-    console.log(req.body)
+    const { id, comment, firstName } = req.params;
     const post = await Post.findById(id);
-    post.comments.push({ userIdLogged, firstName, email, comment })
+    post.comments.push({ firstName, comment })
     const updatedpost = await Post.findByIdAndUpdate(id, { comments: post.comments }, { new: true })
     // const updatedposts = await Post.find()
     res.status(200).json(updatedpost)
