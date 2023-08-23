@@ -13,6 +13,7 @@ import postsRoutes from "./routes/posts-routes.js";
 import { register } from "./controllers/auth-controller.js";
 import { createPost } from "./controllers/posts-controller.js";
 import { verifyToken } from "./middleware/auth-middleware.js";
+import bodyParser from "body-parser";
 
 // As __dirname is not available in ES module, I am using import.meta.url to get the meta information of ES module
 // i.e absolute path to the module on which it is running
@@ -22,8 +23,10 @@ dotenv.config();
 
 //MiddleWares
 const app = express();
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// app.use(express.json());
+// app.use(express.urlencoded());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded())
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
