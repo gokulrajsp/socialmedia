@@ -68,8 +68,7 @@ export const addRemoveFriend = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const { id, firstName, lastName, occupation, location } = req.params;
-    const {images} = req.body
-    console.log(req.body)
+
     const user = await User.findByIdAndUpdate(id, { firstName: firstName, lastName: lastName, location: location, occupation: occupation  }, { new: true })
     res.status(200).json(user)
 
